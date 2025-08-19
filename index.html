@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>台中私中選校互動報告｜衛道國中部 vs 明道國中部</title>
+  <style>
+    :root{
+      --bg:#f7f7fb;--panel:#ffffff;--ink:#1f2937;--muted:#6b7280;--brand:#2563eb;--brand-2:#f97316;--ok:#16a34a;--warn:#ea580c;--shadow:0 10px 30px rgba(0,0,0,.08);
+      --wd:#374151;--md:#334155;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#f9fafb, #eef2ff 40%, #f7f7fb 100%);color:var(--ink);font:16px/1.45 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Noto Sans TC, "PingFang TC", "Microsoft JhengHei", sans-serif;}
+    .wrap{max-width:980px;margin:32px auto;padding:16px}
+    header{display:grid;gap:8px;margin-bottom:18px}
+    .title{font-size:clamp(22px,2.8vw,32px);font-weight:800;letter-spacing:.5px}
+    .subtitle{color:var(--muted)}
+    .card{background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:18px 18px}
+    .grid{display:grid;gap:14px}
+    @media(min-width:840px){.grid{grid-template-columns:1.1fr 1fr}}
+    .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .kpi{background:#f3f4f6;border-radius:12px;padding:10px}
+    .kpi small{display:block;color:var(--muted)}
+    .kpi b{font-size:20px}
+    .school-badges{display:flex;gap:8px;flex-wrap:wrap}
+    .badge{border-radius:999px;padding:6px 10px;background:#eef2ff;color:#4338ca;font-weight:700}
+    .progress{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,var(--brand),#22c55e);transition:width .25s ease}
+    fieldset{border:0;margin:0;padding:0}
+    .question{padding:16px 0;border-top:1px dashed #e5e7eb}
+    .question legend{font-weight:800;margin-bottom:12px}
+    .options{display:grid;gap:10px}
+    .opt{display:flex;align-items:flex-start;gap:10px;background:#f8fafc;border:1px solid #e5e7eb;padding:10px;border-radius:12px;cursor:pointer;transition:transform .05s}
+    .opt:hover{transform:translateY(-1px)}
+    input[type="radio"],input[type="checkbox"]{margin-top:3px}
+    .result{display:grid;gap:8px}
+    .pill{display:inline-flex;align-items:center;gap:8px;background:#111827;color:#fff;border-radius:999px;padding:8px 12px;font-weight:800}
+    .pill.wd{background:#111827}
+    .pill.md{background:#0f172a}
+    .meter{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .meter > div{background:#f3f4f6;border-radius:12px;padding:8px}
+    .meter .w{height:10px;border-radius:999px;background:linear-gradient(90deg,#111827,#6b7280)}
+    .meter .m{height:10px;border-radius:999px;background:linear-gradient(90deg,#0f172a,#64748b)}
+    details{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:10px}
+    summary{cursor:pointer;font-weight:700}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+    button{appearance:none;border:0;background:var(--brand);color:white;padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer;box-shadow:var(--shadow)}
+    button.secondary{background:#0f172a}
+    button.ghost{background:#f3f4f6;color:#111827}
+    .muted{color:var(--muted)}
+    .footnote{font-size:13px;color:var(--muted)}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{background:#eef2ff;color:#3730a3;border-radius:999px;padding:6px 10px;font-weight:700}
+    .sr{position:absolute;left:-9999px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title">🎓 台中私中選校互動報告 <span class="muted">｜衛道國中部 vs 明道國中部</span></div>
+    <div class="subtitle">依你的勾選即時計分，幫你看見「更像哪間」。沒有對錯，只有更合身。</div>
+  </header>
+
+  <div class="grid">
+    <section class="card">
+      <div class="kpis">
+        <div class="kpi"><small>作答進度</small><b id="progress-text">0/0</b><div class="progress" aria-hidden="true"><div id="progress-bar" class="bar"></div></div></div>
+        <div class="kpi"><small>目前傾向</small><b id="tendency">—</b></div>
+      </div>
+
+      <form id="quiz" aria-describedby="helper">
+        <p id="helper" class="footnote">提示：每題選 1 項。結果會自動更新。</p>
+
+        <fieldset class="question" data-q="1">
+          <legend>1) 地點便利性</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q1" value="md1" data-wd="0" data-md="1" /> 我家在烏日或明道附近（距離優勢）</label>
+            <label class="opt"><input type="radio" name="q1" value="both1" data-wd="0" data-md="0" /> 交通不拘，只要校風合適</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question" data-q="2">
+          <legend>2) 孩子的學習特質</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q2" value="wd2" data-wd="1" data-md="0" /> 自律、能安靜讀書（需要穩定讀書氛圍）</label>
+            <label class="opt"><input type="radio" name="q2" value="md2" data-wd="0" data-md="1" /> 喜歡活動、需要多元舞台</label>
+            <label class="opt"><input type="radio" name="q2" value="wd2b" data-wd="1" data-md="0" /> 自我要求高，想要嚴謹督促</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question" data-q="3">
+          <legend>3) 家庭陪伴程度</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q3" value="both3" data-wd="0" data-md="0" /> 家長能積極介入課業（兩校皆可）</label>
+            <label class="opt"><input type="radio" name="q3" value="wd3" data-wd="1" data-md="0" /> 家長較忙，需要環境自動帶動（同儕讀書風氣）</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question" data-q="4">
+          <legend>4) 孩子的性格</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q4" value="wd4" data-wd="1" data-md="0" /> 內向安靜（怕被活動拉走注意力）</label>
+            <label class="opt"><input type="radio" name="q4" value="md4" data-wd="0" data-md="1" /> 外向活潑（喜歡舞台與社團）</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question" data-q="5">
+          <legend>5) 升學取向</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q5" value="both5" data-wd="0" data-md="0" /> 目標頂尖高中（兩校皆具備條件）</label>
+            <label class="opt"><input type="radio" name="q5" value="md5" data-wd="0" data-md="1" /> 想要多才多藝＋升學兼顧</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question" data-q="6">
+          <legend>6) 課業節奏承受度</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q6" value="wd6" data-wd="1" data-md="0" /> 偏好穩定、聚焦讀書的節奏</label>
+            <label class="opt"><input type="radio" name="q6" value="md6" data-wd="0" data-md="1" /> 能適應活動多、進度快的環境</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="question" data-q="7">
+          <legend>7) 校風偏好</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q7" value="wd7" data-wd="1" data-md="0" /> 喜歡規範明確、宗教背景的穩定感</label>
+            <label class="opt"><input type="radio" name="q7" value="md7" data-wd="0" data-md="1" /> 更在意設施齊全、活動舞台與資源</label>
+          </div>
+        </fieldset>
+
+        <details class="question">
+          <summary>進階加權（可選）</summary>
+          <div class="options" style="margin-top:10px">
+            <label class="opt"><input type="checkbox" id="w-distance-md" data-wd="0" data-md="1" /> 距離優先（家住明道附近）</label>
+            <label class="opt"><input type="checkbox" id="w-stability-wd" data-wd="1" data-md="0" /> 課程穩定優先（少分心、少活動）</label>
+          </div>
+        </details>
+      </form>
+
+      <div class="toolbar" style="margin-top:14px">
+        <button type="button" class="ghost" id="reset">重設</button>
+        <button type="button" class="secondary" id="share">複製結果連結</button>
+        <button type="button" id="print">匯出 PDF（列印）</button>
+      </div>
+
+    </section>
+
+    <aside class="card result" aria-live="polite" aria-atomic="true">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="pill wd" id="wd-pill">🛡️ 衛道分數 <span id="wd-score">0</span></span>
+        <span class="pill md" id="md-pill">🏛️ 明道分數 <span id="md-score">0</span></span>
+      </div>
+
+      <div class="meter">
+        <div>
+          <div style="display:flex;justify-content:space-between"><small>衛道</small><small id="wd-percent">0%</small></div>
+          <div class="w" id="wd-meter"></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between"><small>明道</small><small id="md-percent">0%</small></div>
+          <div class="m" id="md-meter"></div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:10px 0 6px">建議結果</h3>
+        <div id="advice" class="tags"></div>
+        <p id="advice-text" class="muted">尚未作答，先從第一題開始。</p>
+      </div>
+
+      <details>
+        <summary>校園重點摘要（點開看）</summary>
+        <div style="margin-top:8px">
+          <p><b>衛道：</b>氛圍嚴謹、讀書風氣濃、同儕自動帶動、課程穩定。</p>
+          <p><b>明道：</b>設備與活動資源豐富、舞台多、進度快、需自我時間管理。</p>
+          <p class="footnote">※ 小測驗僅供參考，最終仍建議實地參訪、與在校家長與學生交流。</p>
+        </div>
+      </details>
+    </aside>
+  </div>
+
+  <p class="footnote" style="margin-top:16px">製作：互動式選校小測驗（ELINA 專用）。資料屬性為一般觀察，非官方排名。</p>
+</div>
+
+<script>
+(function(){
+  const form = document.getElementById('quiz');
+  const questions = Array.from(form.querySelectorAll('.question fieldset'));
+  const progressText = document.getElementById('progress-text');
+  const progressBar = document.getElementById('progress-bar');
+  const wdScoreEl = document.getElementById('wd-score');
+  const mdScoreEl = document.getElementById('md-score');
+  const wdMeter = document.getElementById('wd-meter');
+  const mdMeter = document.getElementById('md-meter');
+  const wdPercent = document.getElementById('wd-percent');
+  const mdPercent = document.getElementById('md-percent');
+  const tendencyEl = document.getElementById('tendency');
+  const advice = document.getElementById('advice');
+  const adviceText = document.getElementById('advice-text');
+
+  const resetBtn = document.getElementById('reset');
+  const shareBtn = document.getElementById('share');
+  const printBtn = document.getElementById('print');
+
+  const allInputs = Array.from(form.querySelectorAll('input'));
+
+  const totalQs = questions.length; // 7
+  progressText.textContent = `0/${totalQs}`;
+
+  function collectScores(){
+    let wd = 0, md = 0, answered = 0;
+    const reasons = [];
+
+    // radio fieldsets
+    for(const fs of questions){
+      const sel = fs.querySelector('input:checked');
+      if(sel){
+        answered++;
+        const w = Number(sel.getAttribute('data-wd')||0);
+        const m = Number(sel.getAttribute('data-md')||0);
+        wd += w; md += m;
+        if(w>m){reasons.push({label: sel.parentElement.textContent.trim(), school:'wd'});} 
+        else if(m>w){reasons.push({label: sel.parentElement.textContent.trim(), school:'md'});} 
+        else {reasons.push({label: sel.parentElement.textContent.trim(), school:'both'});}        
+      }
+    }
+
+    // advanced weights
+    form.querySelectorAll('details input[type="checkbox"]').forEach(cb=>{
+      if(cb.checked){
+        const w = Number(cb.getAttribute('data-wd')||0);
+        const m = Number(cb.getAttribute('data-md')||0);
+        wd += w; md += m;
+        reasons.push({label: cb.parentElement.textContent.trim(), school: w>m? 'wd': (m>w?'md':'both')});
+      }
+    })
+
+    return {wd, md, answered, reasons};
+  }
+
+  function render(){
+    const {wd, md, answered, reasons} = collectScores();
+
+    // progress
+    progressText.textContent = `${answered}/${totalQs}`;
+    progressBar.style.width = `${Math.round(answered/totalQs*100)}%`;
+
+    // numbers
+    wdScoreEl.textContent = wd;
+    mdScoreEl.textContent = md;
+
+    const sum = Math.max(1, wd+md);
+    wdMeter.style.width = `${Math.round(wd/sum*100)}%`;
+    mdMeter.style.width = `${Math.round(md/sum*100)}%`;
+    wdPercent.textContent = `${Math.round(wd/sum*100)}%`;
+    mdPercent.textContent = `${Math.round(md/sum*100)}%`;
+
+    // tendency
+    let t = '—';
+    if(wd>md) t = '🛡️ 傾向：衛道';
+    else if(md>wd) t = '🏛️ 傾向：明道';
+    else if(wd===0 && md===0) t = '—';
+    else t = '⚖️ 兩校均衡（看距離／校風偏好）';
+    tendencyEl.textContent = t;
+
+    // advice tags
+    advice.innerHTML = '';
+    reasons.slice(0,8).forEach(r=>{
+      const span = document.createElement('span');
+      span.className = 'tag';
+      span.textContent = (r.school==='wd'?'🛡️ ':'🏛️ ') + r.label;
+      if(r.school==='both') span.textContent = '🎯 ' + r.label;
+      advice.appendChild(span);
+    });
+
+    // advice paragraph
+    if(wd===0 && md===0){
+      adviceText.textContent = '尚未作答，先從第一題開始。';
+    } else if(wd>md){
+      adviceText.textContent = '建議優先考慮「衛道國中部」。理由：你偏好穩定讀書氛圍、同儕帶動、自律或內向型孩子較自在。若距離遠，請再衡量通勤成本。';
+    } else if(md>wd){
+      adviceText.textContent = '建議優先考慮「明道國中部」。理由：你看重活動與資源、多元舞台、能適應較快節奏。請同步規劃時間管理以維持學業表現。';
+    } else {
+      adviceText.textContent = '兩校皆可成就孩子。接下來以「距離便利、校園氛圍喜好、社團資源需求」排序實地走訪，比一比最直觀的感受。';
+    }
+
+    // update URL for share
+    updateURL();
+  }
+
+  function updateURL(){
+    const params = new URLSearchParams();
+    // radios
+    questions.forEach(fs=>{
+      const name = fs.querySelector('input[type="radio"]').name;
+      const sel = fs.querySelector('input:checked');
+      if(sel) params.set(name, sel.value);
+    })
+    // checkboxes
+    form.querySelectorAll('details input[type="checkbox"]').forEach(cb=>{
+      params.set(cb.id, cb.checked ? '1':'0');
+    })
+    const newURL = `${location.pathname}?${params.toString()}`;
+    history.replaceState(null, '', newURL);
+  }
+
+  function restoreFromURL(){
+    const qs = new URLSearchParams(location.search);
+    if(!qs.size) return;
+    // radios
+    questions.forEach(fs=>{
+      const name = fs.querySelector('input[type="radio"]').name;
+      const val = qs.get(name);
+      if(val){
+        const el = fs.querySelector(`input[value="${CSS.escape(val)}"]`);
+        if(el) el.checked = true;
+      }
+    })
+    // checkboxes
+    form.querySelectorAll('details input[type="checkbox"]').forEach(cb=>{
+      const v = qs.get(cb.id);
+      if(v==='1') cb.checked = true;
+    })
+  }
+
+  // listeners
+  form.addEventListener('change', render);
+  resetBtn.addEventListener('click', ()=>{
+    allInputs.forEach(i=>{ if(i.type==='radio' || i.type==='checkbox'){ i.checked=false; } });
+    history.replaceState(null,'', location.pathname);
+    render();
+  });
+  shareBtn.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(location.href);
+      shareBtn.textContent = '已複製連結！';
+      setTimeout(()=>shareBtn.textContent='複製結果連結',1600);
+    }catch{
+      alert('複製失敗，請手動複製網址列。');
+    }
+  });
+  printBtn.addEventListener('click', ()=>window.print());
+
+  // init
+  restoreFromURL();
+  render();
+})();
+</script>
+</body>
+</html>
